@@ -138,16 +138,13 @@ class MainActivity : ComponentActivity() {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        // Get the active WiFi network
         val wifiNetwork = connectivityManager.allNetworks.firstOrNull { network ->
             val capabilities = connectivityManager.getNetworkCapabilities(network)
             capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
         } ?: return "Login failed: No active WiFi connection found."
 
-        // Bind the request to the WiFi network
         val client = OkHttpClient.Builder().socketFactory(wifiNetwork.socketFactory).build()
 
-        // Form-encoded request body
         val requestBody = FormBody.Builder()
             .add("code", "1")
             .add("loginid", email)
@@ -172,7 +169,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun getSuccessOrErrorMessage(response: Response): String {
-        val html = response.body?.string();
+        val html = response.body?.string()
         if (html != null && html.contains("Authentisierung gelungen"))
             return "Login successful"
         return "Login failed"
@@ -189,13 +186,13 @@ class MainActivity : ComponentActivity() {
                 if (connection.responseCode == HttpsURLConnection.HTTP_OK) {
                     val response = connection.inputStream.bufferedReader().use { it.readText() }
 
-                    // Extract the IP using regex
+
                     val regex = """<input\s+type="ipaddr"\s+name="ipaddr"\s+value="([\d.]+)""""
                     val pattern = Pattern.compile(regex)
                     val matcher = pattern.matcher(response)
 
                     if (matcher.find()) {
-                        return@withContext matcher.group(1) // Extracted IP Address
+                        return@withContext matcher.group(1) as String
                     }
                 }
             } catch (e: Exception) {
