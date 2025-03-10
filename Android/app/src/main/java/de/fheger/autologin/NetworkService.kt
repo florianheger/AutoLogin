@@ -13,9 +13,11 @@ import javax.net.ssl.HttpsURLConnection
 
 class NetworkService {
     suspend fun makePostRequestViaWifi(
-        context: Context, url: String, email: String, password: String
+        context: Context, email: String, password: String
     ): String {
+        val url = "https://login.ruhr-uni-bochum.de/cgi-bin/laklogin"
         val ipAddress = getLoginIpAddress()
+
         println("Try to login: mail: $email, password: $password, ipaddr: $ipAddress")
 
         val connectivityManager =

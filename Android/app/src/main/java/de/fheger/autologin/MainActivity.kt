@@ -113,7 +113,6 @@ class MainActivity() : ComponentActivity() {
         runBlocking {
             val message = networkService.makePostRequestViaWifi(
                 context,
-                "https://login.ruhr-uni-bochum.de/cgi-bin/laklogin",
                 email,
                 password
             )
