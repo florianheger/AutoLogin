@@ -2,9 +2,7 @@ package de.fheger.autologin
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.DhcpInfo
 import android.net.NetworkCapabilities
-import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -32,18 +30,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.json.JSONObject
 import kotlinx.coroutines.withContext
 import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
-import java.net.InetAddress
-import java.net.NetworkInterface
 import java.net.URL
 import java.util.regex.Pattern
 import javax.net.ssl.HttpsURLConnection
-import kotlin.math.log
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,21 +118,19 @@ class MainActivity : ComponentActivity() {
     private fun login(email: String, password: String, context: Context) {
         runBlocking {
             val ipAddress: String = getLoginIpAddress()
-            print(
-                makePostRequestViaWifi(
-                    context,
-                    "https://login.ruhr-uni-bochum.de/cgi-bin/laklogin",
-                    email,
-                    password,
-                    ipAddress
-                )
+            val message = makePostRequestViaWifi(
+                context,
+                "https://login.ruhr-uni-bochum.de/cgi-bin/laklogin",
+                email,
+                password,
+                ipAddress
             )
-            println("Hallo Test")
+            Toast.makeText(context, message, Toast.LENGTH_SHORT)
+                .show()
         }
-        // TODO login
     }
 
-    suspend fun makePostRequestViaWifi(
+    private suspend fun makePostRequestViaWifi(
         context: Context, url: String, email: String, password: String, ipAddress: String
     ): String {
         println("Try to login: mail: $email, password: $password, ipaddr: $ipAddress")
@@ -152,7 +142,7 @@ class MainActivity : ComponentActivity() {
         val wifiNetwork = connectivityManager.allNetworks.firstOrNull { network ->
             val capabilities = connectivityManager.getNetworkCapabilities(network)
             capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
-        } ?: return "No active WiFi connection found."
+        } ?: return "Login failed: No active WiFi connection found."
 
         // Bind the request to the WiFi network
         val client = OkHttpClient.Builder().socketFactory(wifiNetwork.socketFactory).build()
@@ -174,15 +164,18 @@ class MainActivity : ComponentActivity() {
         return withContext(Dispatchers.IO) {
             try {
                 val response = client.newCall(request).execute()
-                if (response.isSuccessful) {
-                    response.body?.string() ?: "Empty response"
-                } else {
-                    "Request failed: ${response.code}"
-                }
+                getSuccessOrErrorMessage(response)
             } catch (e: IOException) {
-                "Error: ${e.message}"
+                "Login failed: ${e.message}"
             }
         }
+    }
+
+    private fun getSuccessOrErrorMessage(response: Response): String {
+        val html = response.body?.string();
+        if (html != null && html.contains("Authentisierung gelungen"))
+            return "Login successful"
+        return "Login failed"
     }
 
     private suspend fun getLoginIpAddress(): String {
