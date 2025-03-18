@@ -34,6 +34,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import android.provider.Settings
+import de.fheger.autologin.services.AutoLoginBroadcastReceiverService
+import de.fheger.autologin.services.NetworkService
 
 class MainActivity() : ComponentActivity() {
     private var networkService: NetworkService = NetworkService()
@@ -74,7 +76,7 @@ class MainActivity() : ComponentActivity() {
             }
         }
 
-        val intent = Intent(context, AutoLoginBroadcastReceiver::class.java)
+        val intent = Intent(context, AutoLoginBroadcastReceiverService::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
