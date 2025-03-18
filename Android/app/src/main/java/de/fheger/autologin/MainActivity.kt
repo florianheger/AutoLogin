@@ -34,9 +34,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import android.provider.Settings
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import de.fheger.autologin.services.AutoLoginBroadcastReceiverService
 import de.fheger.autologin.services.NetworkService
@@ -143,9 +146,7 @@ class MainActivity() : ComponentActivity() {
                 .fillMaxSize()
                 .padding(16.dp), Arrangement.Center
         ) {
-            Text(text = "Auto Login", style = MaterialTheme.typography.headlineLarge)
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(text = "RUB LoginID", style = MaterialTheme.typography.headlineMedium)
+            Text(text = "RUB LoginID", style = MaterialTheme.typography.headlineSmall)
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = email,
@@ -165,7 +166,8 @@ class MainActivity() : ComponentActivity() {
             Button(
                 onClick = {
                     updateCredentials(dataStore, email, password, context)
-                }, modifier = Modifier.fillMaxWidth()
+                },
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Save")
             }

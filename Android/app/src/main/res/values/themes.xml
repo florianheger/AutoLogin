@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.AutoLogin" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.AutoLogin" parent="android:Theme.Material.Light.DarkActionBar">
+        <item name="colorPrimary">#2e4733</item>
+        <item name="colorPrimaryVariant">#C8E6C9</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+
+        <!-- Secondary color -->
+        <item name="colorSecondary">#607D8B</item>
+        <item name="colorOnSecondary">#757575</item>
+
+        <!-- Background -->
+        <item name="android:colorBackground">#FFFFFF</item>
+    </style>
 </resources>
