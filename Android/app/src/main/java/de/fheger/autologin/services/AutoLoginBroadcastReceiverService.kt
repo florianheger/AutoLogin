@@ -1,11 +1,12 @@
-package de.fheger.autologin
+package de.fheger.autologin.services
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import de.fheger.autologin.LoginId
 import kotlinx.coroutines.runBlocking
 
-class AutoLoginBroadcastReceiver() : BroadcastReceiver() {
+class AutoLoginBroadcastReceiverService() : BroadcastReceiver() {
     private val networkService: NetworkService = NetworkService()
 
     override fun onReceive(context: Context, intent: Intent?) {

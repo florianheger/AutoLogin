@@ -1,4 +1,4 @@
-package de.fheger.autologin
+package de.fheger.autologin.services
 
 import android.content.Context
 import android.net.ConnectivityManager
