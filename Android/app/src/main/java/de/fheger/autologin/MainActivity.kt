@@ -34,26 +34,39 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import android.provider.Settings
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.style.TextAlign
 import de.fheger.autologin.services.AutoLoginBroadcastReceiverService
 import de.fheger.autologin.services.NetworkService
 import de.fheger.autologin.services.NotificationService
 
 class MainActivity() : ComponentActivity() {
-    private var networkService: NetworkService = NetworkService()
-    private var notificationService: NotificationService = NotificationService(this)
+    private val networkService: NetworkService = NetworkService()
+    private val notificationService: NotificationService = NotificationService(this)
+    private val dataStore: DataStore = DataStore(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         notificationService.createNotificationChannel()
-        scheduleDailyLogin(this)
+
+        scheduleDailyLoginIfActive(this)
         enableEdgeToEdge()
         setContent {
             EmailPasswordForm(context = this)
         }
     }
 
-    private fun scheduleDailyLogin(context: Context) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    private fun scheduleDailyLoginIfActive(context: Context) {
+        val isAutoLoginActive = runBlocking { dataStore.getAutomaticLoginActive() }
+
+        if (!isAutoLoginActive) {
+            cancelDailyLogin(context)
+            return
+        }
+
+        val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (!alarmManager.canScheduleExactAlarms()) {
@@ -86,20 +99,36 @@ class MainActivity() : ComponentActivity() {
         )
     }
 
+    private fun cancelDailyLogin(context: Context) {
+        val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, AutoLoginBroadcastReceiverService::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        alarmManager.cancel(pendingIntent)
+    }
+
     @Composable
     fun EmailPasswordForm(context: Context) {
-        val loginId = remember { LoginId(context) }
+        val dataStore = remember { dataStore }
+        val coroutineScope = rememberCoroutineScope()
 
         var email by remember { mutableStateOf(TextFieldValue()) }
         var password by remember { mutableStateOf(TextFieldValue()) }
-        var isLoaded by remember { mutableStateOf(false) } // Ensure async loading happens only once
+        var isLoaded by remember { mutableStateOf(false) }
+        var isAutoLoginActive by remember { mutableStateOf(false) }
+
 
         // Load saved credentials when the composable first starts
         LaunchedEffect(Unit) {
-            val savedEmail = loginId.getEmail() ?: ""
-            val savedPassword = loginId.getPassword() ?: ""
+            val savedEmail = dataStore.getEmail() ?: ""
+            val savedPassword = dataStore.getPassword() ?: ""
+            val savedAutoLoginActive = dataStore.getAutomaticLoginActive()
+
             email = TextFieldValue(savedEmail)
             password = TextFieldValue(savedPassword)
+            isAutoLoginActive = savedAutoLoginActive
             isLoaded = true
         }
 
@@ -110,10 +139,9 @@ class MainActivity() : ComponentActivity() {
         }
 
         Column(
-            modifier = Modifier
+            Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center
+                .padding(16.dp), Arrangement.Center
         ) {
             Text(text = "Auto Login", style = MaterialTheme.typography.headlineLarge)
             Spacer(modifier = Modifier.height(24.dp))
@@ -136,11 +164,7 @@ class MainActivity() : ComponentActivity() {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        loginId.saveCredentials(email.text, password.text)
-                    }
-                    Toast.makeText(context, "Credentials updated successfully", Toast.LENGTH_SHORT)
-                        .show()
+                    updateCredentials(dataStore, email, password, context)
                 }, modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Save")
@@ -152,7 +176,45 @@ class MainActivity() : ComponentActivity() {
             ) {
                 Text("Login!")
             }
+            Spacer(modifier = Modifier.height(12.dp))
+            // Switch for Auto Login
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Switch(
+                    checked = isAutoLoginActive,
+                    onCheckedChange = { isChecked ->
+                        isAutoLoginActive = isChecked
+                        coroutineScope.launch {
+                            dataStore.setAutomaticLoginActive(isChecked)
+                        }
+                        scheduleDailyLoginIfActive(context)
+                    }
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = if (isAutoLoginActive) "Automatic login active" else "Automatic login not active",
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Start
+                )
+            }
         }
+    }
+
+    private fun updateCredentials(
+        dataStore: DataStore,
+        email: TextFieldValue,
+        password: TextFieldValue,
+        context: Context
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStore.saveCredentials(email.text, password.text)
+        }
+        Toast.makeText(context, "Credentials updated successfully", Toast.LENGTH_SHORT)
+            .show()
     }
 
     private fun login(email: String, password: String, context: Context) {
