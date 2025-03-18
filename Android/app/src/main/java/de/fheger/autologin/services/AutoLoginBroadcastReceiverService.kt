@@ -17,7 +17,7 @@ class AutoLoginBroadcastReceiverService() : BroadcastReceiver() {
                 dataStore.getEmail()!!,
                 dataStore.getPassword()!!
             )
-            val notificationService: NotificationService = NotificationService(context)
+            val notificationService = NotificationService(context)
             notificationService.makeNotification("Automatic login", message)
             print(message)
         }

@@ -33,7 +33,7 @@ class DataStore(private val context: Context) {
     }
 
     suspend fun getAutomaticLoginActive(): Boolean {
-        return context.dataStore.data.map { it[AUTOMATIC_LOGIN_ACTIVE_KEY] }.first() ?: false;
+        return context.dataStore.data.map { it[AUTOMATIC_LOGIN_ACTIVE_KEY] }.first() ?: false
     }
 
     suspend fun setAutomaticLoginActive(isAutomaticLoginActive: Boolean) {
