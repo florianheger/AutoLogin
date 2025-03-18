@@ -3,7 +3,7 @@ package de.fheger.autologin.services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import de.fheger.autologin.LoginId
+import de.fheger.autologin.DataStore
 import kotlinx.coroutines.runBlocking
 
 class AutoLoginBroadcastReceiverService() : BroadcastReceiver() {
@@ -11,12 +11,14 @@ class AutoLoginBroadcastReceiverService() : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
         runBlocking {
-            val loginId = LoginId(context)
+            val dataStore = DataStore(context)
             val message = networkService.makePostRequestViaWifi(
                 context,
-                loginId.getEmail()!!,
-                loginId.getPassword()!!
+                dataStore.getEmail()!!,
+                dataStore.getPassword()!!
             )
+            val notificationService: NotificationService = NotificationService(context)
+            notificationService.makeNotification("Automatic login", message)
             print(message)
         }
     }
