@@ -35,11 +35,12 @@ import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import android.provider.Settings
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import de.fheger.autologin.services.AutoLoginBroadcastReceiverService
 import de.fheger.autologin.services.NetworkService
@@ -88,7 +89,7 @@ class MainActivity() : ComponentActivity() {
             timeInMillis = System.currentTimeMillis()
             set(Calendar.HOUR_OF_DAY, 7)
             set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
+            set(Calendar.SECOND, 30)
 
             if (timeInMillis < System.currentTimeMillis()) {
                 add(Calendar.DAY_OF_YEAR, 1)
@@ -146,7 +147,19 @@ class MainActivity() : ComponentActivity() {
                 .fillMaxSize()
                 .padding(16.dp), Arrangement.Center
         ) {
-            Text(text = "RUB LoginID", style = MaterialTheme.typography.headlineSmall)
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_launcher_round),
+                    contentDescription = "App Icon",
+                    modifier = Modifier
+                        .size(120.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(text = "RUB LoginID", style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = email,
