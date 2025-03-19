@@ -1,4 +1,4 @@
-package de.fheger.autologin
+package de.fheger.grimlogin
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -42,9 +42,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import de.fheger.autologin.services.AutoLoginBroadcastReceiverService
-import de.fheger.autologin.services.NetworkService
-import de.fheger.autologin.services.NotificationService
+import de.fheger.grimlogin.services.AutoLoginBroadcastReceiverService
+import de.fheger.grimlogin.services.NetworkService
+import de.fheger.grimlogin.services.NotificationService
 
 class MainActivity() : ComponentActivity() {
     private val networkService: NetworkService = NetworkService()

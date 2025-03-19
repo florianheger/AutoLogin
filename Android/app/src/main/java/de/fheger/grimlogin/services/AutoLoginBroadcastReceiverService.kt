@@ -1,9 +1,9 @@
-package de.fheger.autologin.services
+package de.fheger.grimlogin.services
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import de.fheger.autologin.DataStore
+import de.fheger.grimlogin.DataStore
 import kotlinx.coroutines.runBlocking
 
 class AutoLoginBroadcastReceiverService() : BroadcastReceiver() {

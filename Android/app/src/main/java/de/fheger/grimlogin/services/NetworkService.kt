@@ -1,4 +1,4 @@
-package de.fheger.autologin.services
+package de.fheger.grimlogin.services
 
 import android.content.Context
 import android.net.ConnectivityManager

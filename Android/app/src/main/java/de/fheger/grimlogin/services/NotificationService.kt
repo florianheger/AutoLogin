@@ -1,4 +1,4 @@
-package de.fheger.autologin.services
+package de.fheger.grimlogin.services
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -9,15 +9,14 @@ import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import de.fheger.autologin.MainActivity
-import de.fheger.autologin.R
+import de.fheger.grimlogin.R
 
 class NotificationService(private val context: Context) {
 
     fun makeNotification(title: String, content: String) {
         val channelId = context.getString(R.string.channel_id)
         val builder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_launcher_round)
             .setContentTitle(title)
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

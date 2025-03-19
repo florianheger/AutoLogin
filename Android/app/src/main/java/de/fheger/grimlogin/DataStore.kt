@@ -1,4 +1,4 @@
-package de.fheger.autologin
+package de.fheger.grimlogin
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey

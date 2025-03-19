@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "de.fheger.autologin"
+    namespace = "de.fheger.grimlogin"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "de.fheger.autologin"
+        applicationId = "de.fheger.grimlogin"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

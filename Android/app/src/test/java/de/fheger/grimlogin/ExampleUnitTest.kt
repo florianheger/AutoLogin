@@ -1,4 +1,4 @@
-package de.fheger.autologin
+package de.fheger.grimlogin
 
 import org.junit.Test
 

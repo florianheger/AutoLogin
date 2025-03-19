@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AutoLogin"
+rootProject.name = "GrimLogin"
 include(":app")
  

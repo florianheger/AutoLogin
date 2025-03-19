@@ -1,4 +1,4 @@
-package de.fheger.autologin.ui.theme
+package de.fheger.grimlogin.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
