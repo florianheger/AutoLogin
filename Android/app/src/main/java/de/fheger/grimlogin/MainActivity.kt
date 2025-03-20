@@ -162,7 +162,7 @@ class MainActivity() : ComponentActivity() {
             OutlinedTextField(
                 value = loginId,
                 onValueChange = { loginId = it },
-                label = { Text("LoginId") },
+                label = { Text("LoginID") },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
