@@ -23,9 +23,9 @@ class NetworkService {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        val wifiNetwork = connectivityManager.allNetworks.firstOrNull { network ->
+        val wifiNetwork = connectivityManager.activeNetwork?.let { network ->
             val capabilities = connectivityManager.getNetworkCapabilities(network)
-            capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
+            if (capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) network else null
         } ?: return "Login failed: No active WiFi connection found."
 
         val client = OkHttpClient.Builder().socketFactory(wifiNetwork.socketFactory).build()
