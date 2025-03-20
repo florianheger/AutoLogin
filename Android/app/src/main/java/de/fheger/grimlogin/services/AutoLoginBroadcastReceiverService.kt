@@ -14,7 +14,7 @@ class AutoLoginBroadcastReceiverService() : BroadcastReceiver() {
             val dataStore = DataStore(context)
             val message = networkService.makePostRequestViaWifi(
                 context,
-                dataStore.getEmail()!!,
+                dataStore.getLoginId()!!,
                 dataStore.getPassword()!!
             )
             val notificationService = NotificationService(context)

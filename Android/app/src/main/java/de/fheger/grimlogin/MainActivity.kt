@@ -58,7 +58,7 @@ class MainActivity() : ComponentActivity() {
         scheduleDailyLoginIfActive(this)
         enableEdgeToEdge()
         setContent {
-            EmailPasswordForm(context = this)
+            LoginForm(context = this)
         }
     }
 
@@ -114,30 +114,28 @@ class MainActivity() : ComponentActivity() {
     }
 
     @Composable
-    fun EmailPasswordForm(context: Context) {
+    fun LoginForm(context: Context) {
         val dataStore = remember { dataStore }
         val coroutineScope = rememberCoroutineScope()
 
-        var email by remember { mutableStateOf(TextFieldValue()) }
+        var loginId by remember { mutableStateOf(TextFieldValue()) }
         var password by remember { mutableStateOf(TextFieldValue()) }
         var isLoaded by remember { mutableStateOf(false) }
         var isAutoLoginActive by remember { mutableStateOf(false) }
 
 
-        // Load saved credentials when the composable first starts
         LaunchedEffect(Unit) {
-            val savedEmail = dataStore.getEmail() ?: ""
+            val savedLoginId = dataStore.getLoginId() ?: ""
             val savedPassword = dataStore.getPassword() ?: ""
             val savedAutoLoginActive = dataStore.getAutomaticLoginActive()
 
-            email = TextFieldValue(savedEmail)
+            loginId = TextFieldValue(savedLoginId)
             password = TextFieldValue(savedPassword)
             isAutoLoginActive = savedAutoLoginActive
             isLoaded = true
         }
 
         if (!isLoaded) {
-            // Show a loading indicator while data is being retrieved
             CircularProgressIndicator(modifier = Modifier.padding(16.dp))
             return
         }
@@ -162,9 +160,9 @@ class MainActivity() : ComponentActivity() {
             Text(text = "RUB LoginID", style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Email Address") },
+                value = loginId,
+                onValueChange = { loginId = it },
+                label = { Text("LoginId") },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -178,7 +176,7 @@ class MainActivity() : ComponentActivity() {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    updateCredentials(dataStore, email, password, context)
+                    updateCredentials(dataStore, loginId, password, context)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -186,7 +184,7 @@ class MainActivity() : ComponentActivity() {
             }
             Spacer(modifier = Modifier.height(12.dp))
             Button(
-                onClick = { login(email.text, password.text, context) },
+                onClick = { login(loginId.text, password.text, context) },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Login!")
@@ -247,6 +245,6 @@ class MainActivity() : ComponentActivity() {
     @Preview(showBackground = true)
     @Composable
     fun PreviewEmailPasswordForm() {
-        EmailPasswordForm(context = this)
+        LoginForm(context = this)
     }
 }
