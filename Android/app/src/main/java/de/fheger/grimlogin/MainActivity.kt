@@ -190,7 +190,6 @@ class MainActivity() : ComponentActivity() {
                 Text("Login!")
             }
             Spacer(modifier = Modifier.height(12.dp))
-            // Switch for Auto Login
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
