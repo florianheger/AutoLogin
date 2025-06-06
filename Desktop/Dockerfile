@@ -3,19 +3,22 @@ FROM python:3.11-slim
 # Create app directory
 WORKDIR /app
 
+# Install dependencies and cron
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends cron curl ca-certificates gnupg && \
+    rm -rf /var/lib/apt/lists/*
+
 # Copy files
-COPY your_script.py .
+COPY main.py .
 COPY logindata .
 COPY cronjob /etc/cron.d/dailyjob
 
-# Install cron
-RUN apt-get update && \
-    apt-get install -y cron && \
-    chmod 0644 /etc/cron.d/dailyjob && \
+# Set correct permissions for cron job and install it
+RUN chmod 0644 /etc/cron.d/dailyjob && \
     crontab /etc/cron.d/dailyjob
 
-# Create log file
+# Create a log file to be able to run tail
 RUN touch /var/log/cron.log
 
-# Start cron and tail logs
-CMD cron && tail -f /var/log/cron.log
+# Start cron and tail the log file
+CMD ["sh", "-c", "cron && tail -f /var/log/cron.log"]
