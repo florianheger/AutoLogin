@@ -2,12 +2,17 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 
+def get_logindata():
+    with open('logindata') as file:
+        logindata = file.readlines()
+        return [e.replace('\n', '') for e in logindata]
+
 def get_login_id():
-    return ""
+    return get_logindata()[0]
 
 
 def get_password():
-    return ""
+    return get_logindata()[1]
 
 
 def set_login_id(driver):
