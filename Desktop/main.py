@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 
 
 def get_logindata():
-    with open('logindata') as file:
+    with open('logindata', 'r') as file:
         logindata = file.readlines()
         return [e.replace('\n', '') for e in logindata]
 
