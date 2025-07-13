@@ -33,7 +33,7 @@ def submit(driver):
 
 
 def auto_login():
-    driver = webdriver.Firefox()
+    driver = webdriver.Chrome()
     driver.get("https://login.ruhr-uni-bochum.de/cgi-bin/start")
     set_login_id(driver)
     set_password(driver)
