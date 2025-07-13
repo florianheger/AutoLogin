@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 
 def get_logindata():
@@ -33,7 +34,8 @@ def submit(driver):
 
 
 def auto_login():
-    driver = webdriver.Firefox()
+    options = FirefoxOptions()
+    driver = webdriver.Remote(options=options, command_executor="http://selenium:4444")
     driver.get("https://login.ruhr-uni-bochum.de/cgi-bin/start")
     set_login_id(driver)
     set_password(driver)

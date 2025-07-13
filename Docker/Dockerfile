@@ -1,5 +1,9 @@
 FROM python:3.11-slim
 
+# install pip dependencies
+RUN pip install --no-cache-dir --upgrade pip \
+  && pip install --no-cache-dir selenium
+
 # Create app directory
 WORKDIR /app
 

@@ -10,3 +10,5 @@ services:
       context: .
     container_name: scheduled-script
     restart: unless-stopped
+    depends_on:
+      - selenium
