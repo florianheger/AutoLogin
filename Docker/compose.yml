@@ -1,0 +1,12 @@
+services:
+  selenium:
+    image: selenium/standalone-firefox:latest
+    ports:
+      - "4444:4444"
+    shm_size: "2g"
+    restart: unless-stopped
+  scheduled-script:
+    build:
+      context: .
+    container_name: scheduled-script
+    restart: unless-stopped
