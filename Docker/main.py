@@ -1,6 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 from datetime import datetime
 
 
@@ -35,7 +35,7 @@ def submit(driver):
 
 
 def auto_login():
-    options = FirefoxOptions()
+    options = ChromeOptions()
     driver = webdriver.Remote(options=options, command_executor="http://selenium:4444")
     driver.get("https://login.ruhr-uni-bochum.de/cgi-bin/start")
     set_login_id(driver)
