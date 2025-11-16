@@ -35,7 +35,6 @@ def submit(driver):
 
 
 def auto_login():
-    print(datetime.now(), "start login process")
     options = FirefoxOptions()
     driver = webdriver.Remote(options=options, command_executor="http://selenium:4444")
     driver.get("https://login.ruhr-uni-bochum.de/cgi-bin/start")
